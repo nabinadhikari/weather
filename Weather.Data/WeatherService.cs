@@ -1,30 +1,29 @@
 ﻿using Newtonsoft.Json;
 using Weather.Contracts;
+using Weather.Contracts.CONFIG;
 
 namespace Weather.Data;
 
 public class WeatherService : IWeatherService
 {
     private readonly HttpClient _http;
-    public WeatherService()
+    private readonly WeatherServiceConfig _config;
+    public WeatherService(WeatherServiceConfig config)
     {
+        _config = config;
         _http = new HttpClient();
     }
 
     private string GetApiKey()
     {
-        var apiKeys = new string[] {
-            "8b7535b42fe1c551f18028f64e8688f7",
-            "9f933451cebf1fa39de168a29a4d9a79"
-        };
         var random = new Random();
-        var randomIndex = random.Next(apiKeys.Length);
-        return apiKeys[randomIndex];
+        var randomIndex = random.Next(_config.ApiKeys.Length);
+        return _config.ApiKeys[randomIndex];
     }
 
     public async Task<ApiResult> GetWeatherForCityAsync(string city, string country)
     {
-        var url = $"https://api.openweathermap.org/data/2.5/weather?q={city},{country}&appid={GetApiKey()}";
+        var url = $"{_config.ApiUrl}?q={city},{country}&appid={GetApiKey()}";
         try
         {
             var response = await _http.GetAsync(url);

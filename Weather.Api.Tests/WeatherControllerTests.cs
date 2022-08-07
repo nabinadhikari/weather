@@ -12,12 +12,6 @@ namespace Weather.Api.Tests;
 public class WeatherControllerTests
 {
     [Fact]
-    public void UnitOfWork_StateUnderTest_ExpectedBehaviour()
-    {
-
-    }
-
-    [Fact]
     public async Task GetWeatherDetails_WithoutCityOrCountry_ReturnsBadRequest()
     {
         // Arrange
