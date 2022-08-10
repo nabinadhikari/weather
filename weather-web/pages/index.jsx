@@ -1,8 +1,41 @@
+import { useState, useEffect } from "react";
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("au");
+  const handleSearch = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setResult("");
+    setErrorMsg("");
+    try {
+      const res = await fetch("http://localhost:5285/weather", {
+        method: "post",
+        headers: {
+          "x-api-key": "ph4wr97efrASTOHasetaqICasIpRuc96",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          city,
+          country,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setResult(data.result);
+      } else {
+        setErrorMsg(res.statusText);
+      }
+    } catch (e) {
+      setErrorMsg(e);
+    }
+    setLoading(false);
+  };
   return (
     <div className={styles.container}>
       <Head>
@@ -17,22 +50,42 @@ export default function Home() {
           <input
             type="text"
             className={styles.inputCity}
-            placeholder="London"
+            placeholder="Melbourne"
+            onChange={(e) => setCity(e.target.value)}
+            value={city}
           />
-          <select className={styles.countrySelection}>
+          <select
+            className={styles.countrySelection}
+            onChange={(e) => setCountry(e.target.value)}
+            value={country}
+          >
             <option value="uk">UK</option>
-            <option value="aus">Australia</option>
+            <option value="au">Australia</option>
           </select>
-          <button className={styles.btnSearch}>Search</button>
+          <button
+            className={styles.btnSearch}
+            disabled={!country || !city || loading}
+            onClick={handleSearch}
+          >
+            Search
+          </button>
         </div>
 
         <div className={styles.result}>
-          <h2>Raining</h2>
+          {loading ? (
+            <p>loading</p>
+          ) : errorMsg ? (
+            <h3 style={{ color: "red" }}>{errorMsg}</h3>
+          ) : result ? (
+            <h2>{result}</h2>
+          ) : (
+            <div />
+          )}
         </div>
       </main>
 
       <footer className={styles.footer}>
-<p></p>
+        <p></p>
       </footer>
     </div>
   );

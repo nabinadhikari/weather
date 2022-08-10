@@ -20,7 +20,7 @@ public class WeatherController : ControllerBase
     }
 
     [HttpPost(Name = nameof(GetWeatherDetails))]
-    [RateLimiterAttr(MaxRequests = 2, TimeWindow = 5)]
+    [RateLimiterAttr(MaxRequests = 5, TimeWindow = 60*60)]
     public async Task<ActionResult<WeatherResponseDto>> GetWeatherDetails([FromBody] WeatherRequestDto dto)
     {
         if (string.IsNullOrEmpty(dto.City) || string.IsNullOrEmpty(dto.Country))
