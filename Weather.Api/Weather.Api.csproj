@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Weather.Contracts\Weather.Contracts.csproj" />
     <ProjectReference Include="..\Weather.Data\Weather.Data.csproj" />
+    <ProjectReference Include="..\Weather.RequestRecordData\Weather.RequestRecordData.csproj" />
   </ItemGroup>
 
 </Project>

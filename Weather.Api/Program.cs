@@ -1,5 +1,7 @@
+using Weather.Api.RateLimit;
 using Weather.Contracts.CONFIG;
 using Weather.Data;
+using Weather.RequestRecordData;
 
 var builder = WebApplication.CreateBuilder(args);
 var allowSpecificOrigins = "allowSpecificOrigins";
@@ -15,6 +17,9 @@ var weatherConfig = builder.Configuration.GetSection("OpenWeatherMapConfig").Get
 builder.Services.AddSingleton(m => webConfig);
 builder.Services.AddSingleton(m => weatherConfig);
 builder.Services.AddSingleton<IWeatherService, WeatherService>();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSingleton<IRequestRecordService, RequestRecordService>();
+
 
 builder.Services.AddCors(options =>
 {
@@ -39,7 +44,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors(allowSpecificOrigins);
 
 app.UseAuthorization();
-
+app.UseRateLimiterMiddleware();
 app.MapControllers();
 
 app.Run();

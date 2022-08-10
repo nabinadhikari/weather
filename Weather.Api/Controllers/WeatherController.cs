@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Weather.Api.RateLimit;
 using Weather.Contracts;
 using Weather.Data;
 
@@ -19,6 +20,7 @@ public class WeatherController : ControllerBase
     }
 
     [HttpPost(Name = nameof(GetWeatherDetails))]
+    [RateLimiterAttr(MaxRequests = 2, TimeWindow = 5)]
     public async Task<ActionResult<WeatherResponseDto>> GetWeatherDetails([FromBody] WeatherRequestDto dto)
     {
         if (string.IsNullOrEmpty(dto.City) || string.IsNullOrEmpty(dto.Country))
