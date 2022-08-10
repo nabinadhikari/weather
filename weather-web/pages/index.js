@@ -14,7 +14,7 @@ export default function Home() {
     setResult("");
     setErrorMsg("");
     try {
-      const res = await fetch("http://localhost:5285/weather", {
+      const res = await fetch("http://localhost:5001/weather", {
         method: "post",
         headers: {
           "x-api-key": "ph4wr97efrASTOHasetaqICasIpRuc96",
@@ -48,9 +48,10 @@ export default function Home() {
         <h1>Weather</h1>
         <div className={styles.inputsWrapper}>
           <input
+            name="city"
             type="text"
             className={styles.inputCity}
-            placeholder="Melbourne"
+            placeholder="City"
             onChange={(e) => setCity(e.target.value)}
             value={city}
           />
